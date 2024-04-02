@@ -1,0 +1,84 @@
+@font-face {
+  font-family: "smythe-regular";
+  src: 
+  url("C:\\Users\\Hubert Khoo\\Documents\\GitHub\\imgbb_litrpg\\lib\\gen\\templates\\fonts\\Smythe-Regular.ttf");
+}
+
+body {
+  padding: 0vw;
+  color: #fff;
+  font-family: "smythe-regular";
+  background-color: rgba(10,10,10,255);
+  /*background: rgb(0,128,0,1);*/
+  background-size: cover;
+}
+
+table {
+  position: relative;
+  margin:  0;
+  font-family: "smythe-regular";
+  font-size: 5em;
+  width: 50%;
+  height: 50%;
+  color: #fff;
+  text-align: center;
+  background-color: rgba(0,0,12, 1); 
+  border: 0.5vw solid #fff;
+  border-radius: 2vw;
+  padding: 1vw;
+  box-shadow:
+            0 0 0.2vw #fff,
+            0 0 1vw #020259,
+            0 0 0.2vw #020259,
+            0 0 1vw #020259,
+            inset 0 0px 2vw #020259; 
+  /* blue is #020259, purple #2C001E, yellow #ffff00 */
+}
+
+span {
+  color: rgba(255, 0, 0, 1);
+  text-shadow: 0vw 0vw 2vw rgba(255, 0, 0, 1);
+}
+
+th, tr{ 
+  font-weight: normal;
+  border-spacing: 0;
+  border-collapse: 0;
+  text-align: center;
+  word-wrap: break-word;
+  overflow: hidden;
+  white-space: normal;
+  /*box-shadow: 0px 0px 12px 2px red inset, 0px 0px 15px 1px red;*/
+}
+
+.message_title {
+  /*border-bottom: 1px inset rgba(255, 0, 0, 1);
+  box-shadow: 0px 10px 20px -17px rgba(255, 0, 0, 1);*/
+}
+
+.icon {
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(128deg) brightness(106%) contrast(104%);
+  padding-right: 0vw;
+  margin-right: 1vw;
+  padding-left: 0vw;
+  width: 3em;
+}
+
+thead { text-transform: uppercase; }
+th { white-space: nowrap; }
+td { width: 100%; }
+
+tbody tr:first-child * { 
+  border-top: 0; /* fixes that border */
+  text-align: center;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 2vw;
+}
+
+thead tr,
+tr:nth-child(even) {
+  background-color: rgba(102,24,34,0.0);
+  /*box-shadow: 0px 0px 15px 0px rgba(0,24,34,0.8) inset;*/
+}
+
