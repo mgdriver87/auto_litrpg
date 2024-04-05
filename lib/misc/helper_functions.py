@@ -1,4 +1,5 @@
 import pickle
+import os
 from PIL import Image, ImageChops
 
 def find_chapter_number(filename):

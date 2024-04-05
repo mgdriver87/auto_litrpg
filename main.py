@@ -20,15 +20,16 @@ imagehtml_folder = WindowsPath(config['OUTPUT']['IMAGEHTMLFOLDER'].replace('"', 
 
 # step 2.5, define chapter number range
 
-specific = False
-specific_chapter = '154'
-
+specific = True
+specific_chapter = '1'
+specific_chapter_stop = '2'
+found = False
 # step 2.6, setup stats class
 persistant_stats = stats.Stats()
 
 # step 3, walk (loop) through chapter folder designated by configfile
 for path in sorted(os.listdir(chapter_folder), key=find_chapter_number):
-    
+    print(path)
     # check if its a word document
     # TODO: fix to check for markdown too
     if path.find(".docx") == -1:
@@ -54,7 +55,12 @@ for path in sorted(os.listdir(chapter_folder), key=find_chapter_number):
         # load pickle stats from previous chapter
         # find the closest pickle stats
         if (specific_chapter not in filename):
-            continue
+            if found is False:
+                continue
+        else:
+            found = True
+        if (specific_chapter_stop in filename):
+            raise Exception
     
     if specific:
         # replace template stats
@@ -73,9 +79,16 @@ for path in sorted(os.listdir(chapter_folder), key=find_chapter_number):
         print("failure!!")
         raise Exception
         break
+    
+    #print(document.value)
+    # clean document up if possible.
+    document = document.value.replace("<br />", "<p></p>")
+    document = document.replace("""@@@""", "***")
 
     # create html
     
     create_html(document, path, imagehtml_folder, chapter_image_folder_name, pickle_file_path, persistant_stats, text=False)
 
     persistant_stats = create_html(document, path, texthtml_folder, chapter_image_folder_name, pickle_file_path, persistant_stats, text=True)
+
+    print("next")

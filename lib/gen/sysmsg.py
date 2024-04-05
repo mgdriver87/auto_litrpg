@@ -9,7 +9,7 @@ config.read('config.ini')
 template_folder = config['INTERMEDIATE']['TEMPLATEFOLDER']
 
 def generate_sysmsg_line(system_message, text=False):
-    #print("im here")
+    #print(len(system_message))
     message_id = system_message.split("|")[0].split("[")[-1].strip(" ")
     name = system_message.split("|")[1].strip().replace("]", " ")
     if system_message.find("Killed") == -1:
@@ -18,17 +18,23 @@ def generate_sysmsg_line(system_message, text=False):
             description = system_message.split("|")[2].strip().replace("]", "")
             if system_message.find("Title") != -1:
                 html_string = open(os.path.join(base, "templates\\html\\title.html")).read()
+                print("using title.html")
             elif system_message.find("Skill") != -1:
                 if system_message.find("Item") == -1:
                     html_string = open(os.path.join(base, "templates\\html\\skill.html")).read()
+                    print("using skill.html")
                 else:
                     html_string = open(os.path.join(base, "templates\\html\\item.html")).read()
+                    print("using item.html")
             elif system_message.find("Item") != -1:
                 html_string = open(os.path.join(base, "templates\\html\\item.html")).read()
+                print("using item.html")
             elif system_message.find("Effect") != -1:
                 html_string = open(os.path.join(base, "templates\\html\\status_effect.html")).read()
+                print("using status_effect.html")
             else:
                 html_string = open(os.path.join(base, "templates\\html\\generic.html")).read()
+                print("using generic.html")
             message_list =  system_message.split("|")[-1].strip("]").replace("</em>", "").replace("<em>", "").split(".")
             stat_message = ""
             for x in message_list:
@@ -38,7 +44,7 @@ def generate_sysmsg_line(system_message, text=False):
                     if text:
                         stat_message += x
                     else:
-                        stat_message += """<p style="color: #ecf0f1;">""" + x + "</p>"
+                        stat_message += """<p>""" + x + "</p>"
             stat_message = stat_message.replace("]", " ")
             if text:
                 html_string = open(os.path.join(base, "templates\\html\\generic_text.html")).read()
@@ -65,6 +71,15 @@ def generate_sysmsg_line(system_message, text=False):
     html_string  = re.sub("ID_PLACEHOLDER", str(message_id), html_string)
     html_string = re.sub("NAME_PLACEHOLDER", str(name), html_string)
     html_string = re.sub("DESCRIPTION_PLACEHOLDER", str(description), html_string)
+
+    if len(system_message) > 200:
+        size = 2
+    else:
+        size = 3
+
+    font_size_string = "font-size: " + str(size) + "em;"
+    html_string = re.sub("FONT_PLACEHOLDER", font_size_string, html_string)
+
     
     print("------------------------------")
     print(description)

@@ -11,26 +11,50 @@ from html2image import Html2Image
 base=os.path.dirname(os.path.abspath(__file__))
 def create_html(document, path, texthtml_folder, chapter_image_folder_name, pickle_file_path, persistant_stats, text=False):
     counter = 0
-    with open(str(texthtml_folder) + "\\" + path.replace(".docx", ".html"), 'wb') as f:
-        #print(document.value)
-        for line in document.value.split("<p>"):
-            #print(line)
-            line = line.replace("</p>", "") 
-            if line.find("MG404") != -1:
-                counter += 1
-                output, persistant_stats = parse_sys_msg(line, chapter_image_folder_name, counter, pickle_file_path, persistant_stats, text=text)
-                f.write(output.encode('utf8'))
-            elif line.find("***") != -1:
-                #linebreak
-                f.write("<hr />".encode('utf8'))
-            else:
-                f.write("<p>".encode('utf8'))
-                #print(line.encode('utf8'))
-                #print(type(line.encode('utf8')))
-                f.write(bytes(line, 'utf8'))
-                f.write("</p>".encode('utf8'))
-    print("wrote to" + str(texthtml_folder) + "\\" + path.replace(".docx", ".html"))
-    return persistant_stats
+    try:
+        with open(str(texthtml_folder) + "\\" + path.replace(".docx", ".html"), 'wb') as f:
+            #print(document.value)
+            
+            for line in document.value.split("<p>"):
+                #print(line)
+                line = line.replace("</p>", "") 
+                if line.find("MG404") != -1:
+                    counter += 1
+                    output, persistant_stats = parse_sys_msg(line, chapter_image_folder_name, counter, pickle_file_path, persistant_stats, text=text)
+                    f.write(output.encode('utf8'))
+                elif line.find("***") != -1:
+                    #linebreak
+                    f.write("<hr />".encode('utf8'))
+                else:
+                    f.write("<p>".encode('utf8'))
+                    #print(line.encode('utf8'))
+                    #print(type(line.encode('utf8')))
+                    f.write(bytes(line, 'utf8'))
+                    f.write("</p>".encode('utf8'))
+        print("wrote to" + str(texthtml_folder) + "\\" + path.replace(".docx", ".html"))
+        return persistant_stats
+    except AttributeError:
+        with open(str(texthtml_folder) + "\\" + path.replace(".docx", ".html"), 'wb') as f:
+            #print(document.value)
+            
+            for line in document.split("<p>"):
+                #print(line)
+                line = line.replace("</p>", "") 
+                if line.find("MG404") != -1:
+                    counter += 1
+                    output, persistant_stats = parse_sys_msg(line, chapter_image_folder_name, counter, pickle_file_path, persistant_stats, text=text)
+                    f.write(output.encode('utf8'))
+                elif line.find("***") != -1:
+                    #linebreak
+                    f.write("<hr />".encode('utf8'))
+                else:
+                    f.write("<p>".encode('utf8'))
+                    #print(line.encode('utf8'))
+                    #print(type(line.encode('utf8')))
+                    f.write(bytes(line, 'utf8'))
+                    f.write("</p>".encode('utf8'))
+        print("wrote to" + str(texthtml_folder) + "\\" + path.replace(".docx", ".html"))
+        return persistant_stats
 
 def parse_sys_msg(line, chapter_image_folder_name, counter, pickle_file_path, persistant_stats, text=False):
     # given an input of persistant stats, we now generate and update
@@ -63,14 +87,17 @@ def parse_sys_msg(line, chapter_image_folder_name, counter, pickle_file_path, pe
             output_string = table.generate_text_table(persistant_stats)
             return output_string, persistant_stats
         else:
-            output_string = table.generate_overall_table(persistant_stats)
+            html_output = table.generate_overall_table(persistant_stats)
             css = open(base + "\\templates\\css\\smythe_stat.css", "r").read()
-            hti.screenshot(html_str=output_string, css_str=css, save_as=image_filename, size=(1200, 16000))
+            hti.screenshot(html_str=html_output, css_str=css, save_as=image_filename, size=(1200, 16000))
             # crop the background out and save image
             crop(chapter_image_folder_name + "\\"+ image_filename)
             url = upload_image(chapter_image_folder_name + "\\"+ image_filename)
+            
             html_output = open(base + "\\templates\\html\\img.html").read()
+            
             html_output = re.sub("URL_PLACEHOLDER", url, html_output)
+            
             return html_output, persistant_stats
     
 
