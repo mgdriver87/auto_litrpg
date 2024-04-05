@@ -2,8 +2,16 @@ import pickle
 from PIL import Image, ImageChops
 
 def find_chapter_number(filename):
+    print(int(filename.split("-")[-1].split(".")[0]))
     try:
+        print(int(filename.split("-")[0].split(" ")[-2]))
         return int(filename.split("-")[0].split(" ")[-2])
+    except:
+        return 100000
+
+def find_chapter_number_alt(filename):
+    try:
+        return int(filename.split("-")[-1].split(".")[0])
     except:
         return 100000
 
