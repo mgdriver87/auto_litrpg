@@ -62,6 +62,11 @@ for path in sorted(os.listdir(imagehtml_folder), key=find_chapter_number):
     # then switch back to default content
     browser.switch_to.default_content()
 
+if semi_auto:
+    0 # do nothing and let author manual control
+else:
+    # back in the default view, we click Publish!
+    publish_button = browser.find_element(By.ID, "pub_chp_btn")
     if semi_auto:
         0
     else:
@@ -69,6 +74,9 @@ for path in sorted(os.listdir(imagehtml_folder), key=find_chapter_number):
         publish_button = browser.find_element(By.ID, "pub_chp_btn")
         publish_button.click()
 
+browser.switch_to.new_window('tab')
+
+browser.get('')
     time.sleep(3600)
 
 
