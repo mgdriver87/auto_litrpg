@@ -46,13 +46,14 @@ browser.execute_script("arguments[0].innerHTML = '%s'" % html_string, text_edito
 browser.switch_to.default_content()
 
 if semi_auto:
-    0
+    0 # do nothing and let author manual control
 else:
     # back in the default view, we click Publish!
     publish_button = browser.find_element(By.ID, "pub_chp_btn")
 
+browser.switch_to.new_window('tab')
 
-time.sleep(3)
+browser.get('')
 
 
 # next is 
