@@ -83,12 +83,15 @@ def generate_text_table(stat_class):
 
     if len(stat_class.status_effects) == 0:
         # means no status effects
-        effect_placeholder_string = """<p style="text-align: center; font-style: italic;">NONE</p>"""
+        effect_placeholder_string = """<p style="text-align: center; font-style: italic; font-weight: bold;">NONE</p>"""
     else:
         for status_effect in stat_class.status_effects:
             new_effect_string = ""
             new_effect_string = re.sub("NAME_PLACEHOLDER", str(status_effect.name), effect_placeholder_string)
-            new_effect_string =re.sub("DESCRIPTION_PLACEHOLDER", str(status_effect.description), new_effect_string)
+            if str(status_effect.description)[-1] != "." and str(status_effect.description)[-1] != "?":
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(status_effect.description) + ".", new_string)
+            else:
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(status_effect.description), new_string)
             new_effect_string = re.sub("STATMESSAGE_PLACEHOLDER", str(status_effect.stat_increase_message), new_effect_string)
             print("###############################")
             print(status_effect.stat_increase_message)
@@ -100,11 +103,15 @@ def generate_text_table(stat_class):
     template_string =  open(os.path.join(base, "templates/html/stat_table_text/generic_entry.html")).read()
     html_string = ""
     if len(stat_class.equipment) == 0:
-        html_string = """<p style="text-align: center; font-style: italic;">NONE</p>"""
+        html_string = """<p style="text-align: center; font-style: italic; font-weight: bold;">NONE</p>"""
     else:
         for element in stat_class.equipment:
             new_string = ""
             new_string = re.sub("NAME_PLACEHOLDER", str(element.name), template_string)
+            if str(element.description)[-1] != "." and str(element.description)[-1] != "?":
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description) + ".", new_string)
+            else:
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
             new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
             new_string = re.sub("STATMESSAGE_PLACEHOLDER", str(element.stat_message), new_string)
             html_string += new_string
@@ -114,12 +121,15 @@ def generate_text_table(stat_class):
     template_string =  open(os.path.join(base, "templates/html/stat_table_text/generic_entry.html")).read()
     html_string = ""
     if len(stat_class.skills) == 0:
-        html_string = """<p style="text-align: center; font-style: italic;">NONE</p>"""
+        html_string = """<p style="text-align: center; font-style: italic; font-weight: bold;">NONE</p>"""
     else:
         for element in stat_class.skills:
             new_string = ""
             new_string = re.sub("NAME_PLACEHOLDER", str(element.name), template_string)
-            new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
+            if str(element.description)[-1] != "." and str(element.description)[-1] != "?":
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description) + ".", new_string)
+            else:
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
             new_string = re.sub("STATMESSAGE_PLACEHOLDER", str(element.stat_increase_message), new_string)
             html_string += new_string
 
@@ -128,12 +138,15 @@ def generate_text_table(stat_class):
     template_string =  open(os.path.join(base, "templates/html/stat_table_text/generic_entry.html")).read()
     html_string = ""
     if len(stat_class.titles) == 0:
-        html_string = """<p style="text-align: center; font-style: italic;">NONE</p>"""
+        html_string = """<p style="text-align: center; font-style: italic; font-weight: bold;">NONE</p>"""
     else:
         for element in stat_class.titles:
             new_string = ""
             new_string = re.sub("NAME_PLACEHOLDER", str(element.name), template_string)
-            new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
+            if str(element.description)[-1] != "." and str(element.description)[-1] != "?":
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description) + ".", new_string)
+            else:
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
             new_string = re.sub("STATMESSAGE_PLACEHOLDER", str(element.stat_message), new_string)
             html_string += new_string
 

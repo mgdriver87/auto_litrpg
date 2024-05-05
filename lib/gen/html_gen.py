@@ -14,7 +14,6 @@ def create_html(document, path, texthtml_folder, chapter_image_folder_name, pick
     try:
         with open(str(texthtml_folder) + "\\" + path.replace(".docx", ".html"), 'wb') as f:
             #print(document.value)
-            
             for line in document.value.split("<p>"):
                 #print(line)
                 line = line.replace("</p>", "") 
@@ -61,6 +60,7 @@ def parse_sys_msg(line, chapter_image_folder_name, counter, pickle_file_path, pe
     hti = Html2Image(output_path=chapter_image_folder_name)
     image_filename = 'image' + str(counter) + '.jpg'
     print(image_filename)
+    print("here is the line" +  line)
     if line.find("Stats Table") == -1:
         # update the stats
         persistant_stats.update_based_on_message(line)
@@ -82,7 +82,7 @@ def parse_sys_msg(line, chapter_image_folder_name, counter, pickle_file_path, pe
             return html_output, persistant_stats
     else:
         persistant_stats.recalculate_stats()
-        save_file(persistant_stats, pickle_file_path)
+        #save_file(persistant_stats, pickle_file_path)
         if text:
             output_string = table.generate_text_table(persistant_stats)
             return output_string, persistant_stats

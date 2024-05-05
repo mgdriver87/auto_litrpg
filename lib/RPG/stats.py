@@ -56,11 +56,16 @@ class Stats:
         '''
         if system_message.find('Level Up') == -1:
             return -1
-        
-        level_list = system_message.split(":")[2].split("|")[0].split("-")
-        print(level_list)
-        level_change = int(level_list[1]) - int(level_list[0])
-        print(level_change)
+        try:
+            level_list = system_message.split(":")[2].split("|")[0].split("-")
+            print(level_list)
+            level_change = int(level_list[1]) - int(level_list[0])
+            print(level_change)
+        except IndexError:
+            level_list = system_message.split(":")[2].split("|")[0].split("→")
+            print(level_list)
+            level_change = int(level_list[1]) - int(level_list[0])
+            print(level_change)
         self.level = int(level_list[1])
         self.base_strength += self.stat_level_increment *level_change
         self.base_dexerity += self.stat_level_increment *level_change
@@ -134,7 +139,10 @@ class Stats:
                 if title.name.find(main_name) != -1:
                     # means it already exists.
                     title.name = name
-                    title.description = description
+                    if str(description)[-1] != "." or str(description)[-1] != "?": 
+                        title.description = str(description) + "."
+                    else:
+                        title.description = description
                     title.stat_message = stats_increase_message
                     # update the bonus_stats
                     title.bonus_stats = self.calculate_stats_based_on_message(stats_increase_message)

@@ -21,12 +21,15 @@ imagehtml_folder = WindowsPath(config['OUTPUT']['IMAGEHTMLFOLDER'].replace('"', 
 # step 2.5, define chapter number range
 
 specific = True
-specific_chapter = '1'
-specific_chapter_stop = '2'
+specific_chapter = '120'
+specific_chapter_stop = '121'
 found = False
 # step 2.6, setup stats class
 persistant_stats = stats.Stats()
 
+print(chapter_folder)
+print(image_folder)
+print(template_folder)
 # step 3, walk (loop) through chapter folder designated by configfile
 for path in sorted(os.listdir(chapter_folder), key=find_chapter_number):
     print(path)

@@ -3,9 +3,7 @@ import os
 from PIL import Image, ImageChops
 
 def find_chapter_number(filename):
-    print(int(filename.split("-")[-1].split(".")[0]))
     try:
-        print(int(filename.split("-")[0].split(" ")[-2]))
         return int(filename.split("-")[0].split(" ")[-2])
     except:
         return 100000

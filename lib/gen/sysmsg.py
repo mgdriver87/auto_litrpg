@@ -12,10 +12,13 @@ def generate_sysmsg_line(system_message, text=False):
     #print(len(system_message))
     message_id = system_message.split("|")[0].split("[")[-1].strip(" ")
     name = system_message.split("|")[1].strip().replace("]", " ")
-    if system_message.find("Killed") == -1:
+    if system_message.find("You killed") == -1 and system_message.find("Killed") == -1 :
         if system_message.find("Level Up") == -1:
             name = system_message.split("|")[1].strip().replace("]", " ")
-            description = system_message.split("|")[2].strip().replace("]", "")
+            try:
+                description = system_message.split("|")[2].strip().replace("]", "")
+            except IndexError:
+                description = system_message.split("|")[1].strip().replace("]", "")
             if system_message.find("Title") != -1:
                 html_string = open(os.path.join(base, "templates\\html\\title.html")).read()
                 print("using title.html")
@@ -44,14 +47,19 @@ def generate_sysmsg_line(system_message, text=False):
                     if text:
                         stat_message += x
                     else:
-                        stat_message += """<p>""" + x + "</p>"
-            stat_message = stat_message.replace("]", " ")
+                        stat_message += """<p>""" + x + "." + "</p>"
+            stat_message = stat_message.replace("]", " ") + "."
             if text:
                 html_string = open(os.path.join(base, "templates\\html\\generic_text.html")).read()
             html_string = re.sub("STATMESSAGE_PLACEHOLDER", str(stat_message), html_string)
         else:
             # its a level up message
-            level_list = system_message.split(":")[2].split("|")[0].split("-")
+            try:
+                level_list = system_message.split(":")[2].split("|")[0].split("-")
+                t = int(level_list[0])
+            except ValueError:
+                level_list = system_message.split(":")[2].split("|")[0].split("→")
+                #print(int(level_list[0]))
             html_string = open(os.path.join(base, "templates\\html\\lvlup.html")).read()
             if text:
                 html_string = open(os.path.join(base, "templates\\html\\lvlup_text.html")).read()
@@ -70,7 +78,10 @@ def generate_sysmsg_line(system_message, text=False):
 
     html_string  = re.sub("ID_PLACEHOLDER", str(message_id), html_string)
     html_string = re.sub("NAME_PLACEHOLDER", str(name), html_string)
-    html_string = re.sub("DESCRIPTION_PLACEHOLDER", str(description), html_string)
+    if str(description)[-1] != "." and str(description)[-1] != "?":
+        html_string = re.sub("DESCRIPTION_PLACEHOLDER", str(description) + ".", html_string)
+    else:
+        html_string = re.sub("DESCRIPTION_PLACEHOLDER", str(description), html_string)
 
     if len(system_message) > 200:
         size = 2
