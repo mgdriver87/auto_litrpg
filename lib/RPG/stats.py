@@ -6,8 +6,8 @@ class Stats:
     def __init__(self):
         # set up starting stats TODO link to config.ini
         self.race = "Human"
-        self.gameclass = "???"
-        self.gamesubclass = "???"
+        self.gameclass = "Unassigned"
+        self.gamesubclass = "Unassigned"
         self.level = 1
         self.base_strength = 10
         self.base_dexerity = 10
@@ -52,20 +52,19 @@ class Stats:
         '''
         the incoming system_message should look something like that. It will be a string.
 
-        MG404: [Level Up: 2->9| All Stats increased, Bonus points granted.] 
+        MG404: [Your level has increased from level 1 to level 2! | All stats increased | Bonus free points granted]
         '''
-        if system_message.find('Level Up') == -1:
+        if system_message.find('Your level has increased') == -1:
             return -1
-        try:
-            level_list = system_message.split(":")[2].split("|")[0].split("-")
-            print(level_list)
-            level_change = int(level_list[1]) - int(level_list[0])
-            print(level_change)
-        except IndexError:
-            level_list = system_message.split(":")[2].split("|")[0].split("→")
-            print(level_list)
-            level_change = int(level_list[1]) - int(level_list[0])
-            print(level_change)
+
+        original_level = system_message.split("|")[0].split("to")[0].split("level")[-1].strip()
+        new_level = system_message.split("|")[0].split("to")[-1].split("level")[-1].strip().replace("!", "")
+        level_list = [original_level, new_level]
+        #level_list = system_message.split(":")[2].split("|")[0].split("-")
+        print(level_list)
+        level_change = int(level_list[1]) - int(level_list[0])
+        print(level_change)
+    
         self.level = int(level_list[1])
         self.base_strength += self.stat_level_increment *level_change
         self.base_dexerity += self.stat_level_increment *level_change
@@ -113,7 +112,7 @@ class Stats:
 
         MG404: [ Title Obtained | Usurper(Basic) | So, climbing the ranks huh? | +5 STR, + 3 AGI, + 10% damage to those of higher authority]
         '''
-        if system_message.find('Level Up') != -1:
+        if system_message.find('Your level has increased') != -1:
             self.update_stats_level_up(system_message)
             return 0
         if system_message.find('Class Obtained') != -1:

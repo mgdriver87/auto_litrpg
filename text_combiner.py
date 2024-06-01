@@ -1,4 +1,3 @@
-# step 1, import
 import configparser
 import mammoth
 import os
@@ -18,20 +17,16 @@ template_folder = WindowsPath(config['INTERMEDIATE']['TEMPLATEFOLDER'].replace('
 texthtml_folder = WindowsPath(config['OUTPUT']['TEXTHTMLFOLDER'].replace('"', ''))
 imagehtml_folder = WindowsPath(config['OUTPUT']['IMAGEHTMLFOLDER'].replace('"', ''))
 
-# step 2.5, define chapter number range
+# first convert all to md.
 
-specific = True
-specific_chapter = '129'
-specific_chapter_stop = '130'
-found = False
-# step 2.6, setup stats class
+book1_chapter_folder = WindowsPath(config['INPUT']['BOOK_1_CH_FOLDER'].replace('"', ''))
+
+combined_book1_ch_name = "BlackMarket Book 1 (TEXT).docx"
+combined_doc = ""
 persistant_stats = stats.Stats()
 
-print(chapter_folder)
-print(image_folder)
-print(template_folder)
-# step 3, walk (loop) through chapter folder designated by configfile
-for path in sorted(os.listdir(chapter_folder), key=find_chapter_number):
+for path in sorted(os.listdir(book1_chapter_folder), key=find_chapter_number):
+    # take all text inside and convert it into text form in a separate doc.
     print(path)
     # check if its a word document
     # TODO: fix to check for markdown too
@@ -39,7 +34,7 @@ for path in sorted(os.listdir(chapter_folder), key=find_chapter_number):
         continue
 
     # found a good chapter.
-    filename = str(chapter_folder) + "\\" + path
+    filename = str(book1_chapter_folder) + "\\" + path
 
     # create a pickle filename for the binary stats to be saved.
     pickle_file_path = filename.split("\\")[-1].replace('.docx', '').replace('Chapter', '')
@@ -48,32 +43,7 @@ for path in sorted(os.listdir(chapter_folder), key=find_chapter_number):
 
     # create the image folder
     chapter_image_folder_name = str(image_folder) + "\\" + path.split("-")[0].strip(" ")
-    try:
-        os.makedirs(chapter_image_folder_name)
-    except FileExistsError:
-        0
-    
-    #TODO: improve specific function
-    if specific:
-        # load pickle stats from previous chapter
-        # find the closest pickle stats
-        if (specific_chapter not in filename):
-            if found is False:
-                continue
-        else:
-            found = True
-        if (specific_chapter_stop in filename):
-            raise Exception
-    
-    if specific:
-        # replace template stats
-        persistant_stats = load_file(pickle_file_path)
-        if persistant_stats == -1:
-            raise Exception("loading failed!")
-        print("hello")
 
-    # convert the current word document into html
-    
     try:
         if ("$" not in filename):
             document = mammoth.convert_to_html(open(filename, 'rb'))
@@ -82,16 +52,12 @@ for path in sorted(os.listdir(chapter_folder), key=find_chapter_number):
         print("failure!!")
         raise Exception
         break
-    
-    #print(document.value)
-    # clean document up if possible.
-    document = document.value.replace("<br />", "<p></p>")
-    document = document.replace("""@@@""", "***")
 
-    # create html
-    
-    create_html(document, path, imagehtml_folder, chapter_image_folder_name, pickle_file_path, persistant_stats, text=False)
+    #print(document.value)
+    document = document.value.replace("""[Stats Table]""", "[Stats Table]<p></p>")
+    document = document.replace("""<p>* * *</p>""", """<p style="text-align: center;">* * *</p>""")
+    #document = document.value.replace("<br />", "<p></p>")
+    #document = document.replace("""@@@""", "***")
 
     persistant_stats = create_html(document, path, texthtml_folder, chapter_image_folder_name, pickle_file_path, persistant_stats, text=True)
 
-    print("next")
