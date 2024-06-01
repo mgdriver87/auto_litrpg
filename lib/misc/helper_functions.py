@@ -15,6 +15,12 @@ def find_chapter_number_alt(filename):
         return int(filename.split("-")[-1].split(".")[0])
     except:
         return 100000
+    
+def find_chapter_number_md(filename):
+    try:
+        return int(filename.split("-")[0].split(" ")[1])
+    except:
+        return 100000
 
 def load_file(chapter_name):
     # load latest pickle
