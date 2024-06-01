@@ -33,6 +33,8 @@ for i in range(len(html_string)):
 with open('output.html', 'w') as f:
     for j in new_string_list:
         f.write(j)
+
+raise Exception
 config = configparser.ConfigParser()
 config.read('config.ini')
 

@@ -14,33 +14,40 @@ from pathlib import WindowsPath
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-#texthtml_folder = WindowsPath(config['OUTPUT']['TEXTHTMLFOLDER'].replace('"', ''))
-#imagehtml_folder = WindowsPath(config['OUTPUT']['IMAGEHTMLFOLDER'].replace('"', ''))
+texthtml_folder = WindowsPath(config['OUTPUT']['TEXTHTMLFOLDER'].replace('"', ''))
+imagehtml_folder = WindowsPath(config['OUTPUT']['IMAGEHTMLFOLDER'].replace('"', ''))
+firefoxprofilefolder = WindowsPath(config['INPUT']['FIREFOXPROFILEFOLDER'].replace('"', ''))
+scribblelink = config['INPUT']['SCRIBBLEHUBLINK']
 
 semi_auto = False
 
 options = Options()
-#options.add_argument('--headless')
+options.add_argument('--headless')
 options.add_argument('-profile')
-options.add_argument('/home/uberchio/.mozilla/firefox/t9ahc2ik.default-release')
+options.add_argument(str(firefoxprofilefolder))
 
 options.set_preference('dom.webdriver.enabled', True)
 options.set_preference('useAutomationExtension', False)
 
 browser = Firefox(options=options)
 
-first_chapter_url = "https://forums.spacebattles.com/threads/dungeon-diver-stealing-a-monster's-power.1154614/"
-#fiction_url
-
-# first we post scribblehub.
-for path in sorted(os.listdir("/home/uberchio/Documents/auto_litrpg/chapters"), key=find_chapter_number_alt):
+first_chapter_url = "https://forums.spacebattles.com/threads/dungeon-diver-stealing-a-monster's-power.1154614/page-9"
+chapter_folder = WindowsPath(r"C:\\Users\\Hubert Khoo\\Documents\\GitHub\\auto_litrpg\\chapters")
+found = False
+for path in sorted(os.listdir(chapter_folder), key=find_chapter_number_alt):
+    if 'chapter-257.' not in path:
+        if found is False:
+            continue
+    else:
+        found = True
     browser.get(first_chapter_url)
 
-    threadmark_label = browser.find_element(By.XPATH, "/html[1]/body[1]/div[1]/div[2]/div[2]/div[5]/div[1]/div[3]/div[2]/div[1]/div[2]/form[1]/div[1]/div[1]/div[1]/div[1]/div[2]/dl[1]/dd[1]/input[1]")
+    threadmark_label = browser.find_element(By.XPATH, '//input[@name="threadmark_label"]')
     threadmark_label.send_keys(path.replace(".html", "").capitalize())
 
-    text_editor = browser.find_element(By.XPATH, "/html[1]/body[1]/div[1]/div[2]/div[2]/div[5]/div[1]/div[3]/div[2]/div[1]/div[2]/form[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[2]/div[1]")
-    html_string = str(open("/home/uberchio/Documents/auto_litrpg/chapters/" + path).read())
+    text_editor = browser.find_element(By.XPATH, '//div[@contenteditable="true"]')
+    html_string = str(open(str(chapter_folder) + "\\" + path, encoding='utf-8').read())
+    print(path)
 
     html_string = html_string.replace("</p>", "</p><p><br></p>") + """<p><hr /></p><p><a href="https://www.patreon.com/KaeNovels" rel=" ugc nofollow">Click Here </a>To read <strong>20 Chapters </strong>ahead on Patreon!&nbsp;</p>"""
 
@@ -48,6 +55,6 @@ for path in sorted(os.listdir("/home/uberchio/Documents/auto_litrpg/chapters"), 
     text_editor.click()
 
     submit_button = browser.find_element(By.CSS_SELECTOR, ".button--primary.button.button--icon.button--icon--reply")
-    #submit_button.click()
-    time.sleep(6000)
+    submit_button.click()
+    time.sleep(3600)
 # next is 

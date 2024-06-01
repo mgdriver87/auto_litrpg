@@ -19,6 +19,11 @@ base=os.path.dirname(os.path.abspath(__file__))
 def generate_text_table(stat_class):
     resulting_html_string = open(os.path.join(base, "templates/html/stat_table_text/text_test.html")).read()
 
+    if stat_class.level < 5:
+        resulting_html_string = re.sub("INTRO_PLACEHOLDER", """<p style="text-align: center; ">Welcome to Raktor!</p>""", resulting_html_string)
+    else:
+        resulting_html_string = re.sub("INTRO_PLACEHOLDER", """""", resulting_html_string)
+
     resulting_html_string = re.sub("LEVEL_PLACEHOLDER", str(stat_class.level), resulting_html_string)
 
     known_placeholders = ["MAX_HP_PLACEHOLDER", "MAX_MP_PLACEHOLDER", "MAX_STA_PLACEHOLDER"]
@@ -83,12 +88,15 @@ def generate_text_table(stat_class):
 
     if len(stat_class.status_effects) == 0:
         # means no status effects
-        effect_placeholder_string = """<p style="text-align: center; font-style: italic;">NONE</p>"""
+        effect_placeholder_string = """<p style="text-align: center; ">None</p>"""
     else:
         for status_effect in stat_class.status_effects:
             new_effect_string = ""
             new_effect_string = re.sub("NAME_PLACEHOLDER", str(status_effect.name), effect_placeholder_string)
-            new_effect_string =re.sub("DESCRIPTION_PLACEHOLDER", str(status_effect.description), new_effect_string)
+            if str(status_effect.description)[-1] != "." and str(status_effect.description)[-1] != "?":
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(status_effect.description) + ".", new_string)
+            else:
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(status_effect.description), new_string)
             new_effect_string = re.sub("STATMESSAGE_PLACEHOLDER", str(status_effect.stat_increase_message), new_effect_string)
             print("###############################")
             print(status_effect.stat_increase_message)
@@ -100,11 +108,15 @@ def generate_text_table(stat_class):
     template_string =  open(os.path.join(base, "templates/html/stat_table_text/generic_entry.html")).read()
     html_string = ""
     if len(stat_class.equipment) == 0:
-        html_string = """<p style="text-align: center; font-style: italic;">NONE</p>"""
+        html_string = """<p style="text-align: center; ">None</p>"""
     else:
         for element in stat_class.equipment:
             new_string = ""
             new_string = re.sub("NAME_PLACEHOLDER", str(element.name), template_string)
+            if str(element.description)[-1] != "." and str(element.description)[-1] != "?":
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description) + ".", new_string)
+            else:
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
             new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
             new_string = re.sub("STATMESSAGE_PLACEHOLDER", str(element.stat_message), new_string)
             html_string += new_string
@@ -114,12 +126,15 @@ def generate_text_table(stat_class):
     template_string =  open(os.path.join(base, "templates/html/stat_table_text/generic_entry.html")).read()
     html_string = ""
     if len(stat_class.skills) == 0:
-        html_string = """<p style="text-align: center; font-style: italic;">NONE</p>"""
+        html_string = """<p style="text-align: center; ">None</p>"""
     else:
         for element in stat_class.skills:
             new_string = ""
             new_string = re.sub("NAME_PLACEHOLDER", str(element.name), template_string)
-            new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
+            if str(element.description)[-1] != "." and str(element.description)[-1] != "?":
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description) + ".", new_string)
+            else:
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
             new_string = re.sub("STATMESSAGE_PLACEHOLDER", str(element.stat_increase_message), new_string)
             html_string += new_string
 
@@ -128,12 +143,15 @@ def generate_text_table(stat_class):
     template_string =  open(os.path.join(base, "templates/html/stat_table_text/generic_entry.html")).read()
     html_string = ""
     if len(stat_class.titles) == 0:
-        html_string = """<p style="text-align: center; font-style: italic;">NONE</p>"""
+        html_string = """<p style="text-align: center; ">None</p>"""
     else:
         for element in stat_class.titles:
             new_string = ""
             new_string = re.sub("NAME_PLACEHOLDER", str(element.name), template_string)
-            new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
+            if str(element.description)[-1] != "." and str(element.description)[-1] != "?":
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description) + ".", new_string)
+            else:
+                new_string =  re.sub("DESCRIPTION_PLACEHOLDER", str(element.description), new_string)
             new_string = re.sub("STATMESSAGE_PLACEHOLDER", str(element.stat_message), new_string)
             html_string += new_string
 
@@ -224,7 +242,7 @@ def generate_status_effects_string(stat_class):
     status_effect_html_string = re.sub("HEADER_TITLE", "STATUS EFFECTS", status_effect_html_string)
     if len(stat_class.status_effects) == 0:
         # means no status effects
-        status_effect_html_string += """<tr><td style="text-align: center;" colspan="4">NONE</td></tr>"""
+        status_effect_html_string += """<tr><td style="text-align: center;" colspan="4">None</td></tr>"""
     else:
         for status_effect in stat_class.status_effects:
             new_effect_string = ""
@@ -284,7 +302,7 @@ def generate_equipment_string(stat_class):
     html_string = open(os.path.join(base, "templates/html/stat_table/parts/header.html")).read()
     html_string = re.sub("HEADER_TITLE", "EQUIPMENT", html_string)
     if len(stat_class.equipment) == 0:
-        html_string += """<tr><td style="text-align: center;" colspan="4">NONE</td></tr>"""
+        html_string += """<tr><td style="text-align: center;" colspan="4">None</td></tr>"""
         return html_string
     else:
         for element in stat_class.equipment:
@@ -302,7 +320,7 @@ def generate_skills_string(stat_class):
     html_string = re.sub("HEADER_TITLE", "SKILLS", html_string)
 
     if len(stat_class.skills) == 0:
-        html_string += """<tr><td style="text-align: center;" colspan="4">NONE</td></tr>"""
+        html_string += """<tr><td style="text-align: center;" colspan="4">None</td></tr>"""
         return html_string
     else:
         for element in stat_class.skills:
@@ -323,7 +341,7 @@ def generate_titles_string(stat_class):
     print("THE LENGTH OF TITLES IS " + str(len(stat_class.titles)))
     print(template_string)
     if len(stat_class.titles) == 0:
-        html_string += """<tr><td style="text-align: center;" colspan="4">NONE</td></tr>"""
+        html_string += """<tr><td style="text-align: center;" colspan="4">None</td></tr>"""
         return html_string
     else:
         for element in stat_class.titles:

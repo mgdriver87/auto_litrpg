@@ -33,7 +33,7 @@ found = False
 #time.sleep(3600)
 # first we post scribblehub.
 for path in sorted(os.listdir(imagehtml_folder), key=find_chapter_number):
-    if '51' not in path:
+    if '65' not in path:
         if found is False:
             continue
         else:
@@ -41,8 +41,8 @@ for path in sorted(os.listdir(imagehtml_folder), key=find_chapter_number):
     else:
         found = True
     
-    if '62' in path:
-        raise Exception ('BOOK 2 CHAPTER HIT!')
+    if '66' in path:
+        raise Exception
     print(path)
     chapter_title  = path.replace('.html', '')
     browser.get("https://www.scribblehub.com/addchapter/1047104/")
@@ -62,21 +62,12 @@ for path in sorted(os.listdir(imagehtml_folder), key=find_chapter_number):
     # then switch back to default content
     browser.switch_to.default_content()
 
-if semi_auto:
-    0 # do nothing and let author manual control
-else:
-    # back in the default view, we click Publish!
-    publish_button = browser.find_element(By.ID, "pub_chp_btn")
     if semi_auto:
         0
     else:
         # back in the default view, we click Publish!
         publish_button = browser.find_element(By.ID, "pub_chp_btn")
         publish_button.click()
-
-browser.switch_to.new_window('tab')
-
-browser.get('')
     time.sleep(3600)
 
 

@@ -38,7 +38,7 @@ browser = webdriver.Chrome(options=options)
 
 found = False
 for path in sorted(os.listdir(imagehtml_folder), key=find_chapter_number):
-    if '3' not in path:
+    if '43' not in path:
         if found is False:
             continue
         else:
@@ -73,5 +73,7 @@ for path in sorted(os.listdir(imagehtml_folder), key=find_chapter_number):
 
     publish_button = browser.find_element(By.ID, "publish")
     publish_button.click()
-    
+
+    print("Waiting five hours\r\n")
+
     time.sleep(3600*5)
