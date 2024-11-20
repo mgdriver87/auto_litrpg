@@ -13,6 +13,12 @@ def find_chapter_number_alt(filename):
         return int(filename.split("-")[-1].split(".")[0])
     except:
         return 100000
+
+def find_chapter_number_colon(filename):
+    try:
+        return int(filename.split(":")[-1].split(".")[0])
+    except:
+        return 100000
     
 def find_chapter_number_md(filename):
     try:
